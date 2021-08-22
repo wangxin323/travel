@@ -64,3 +64,15 @@
 	3、UserDao
 ## 4.3 index页面中用户姓名的提示信息功能
 	从session缓存中获取user对象信心，替换span标签内容$("#spanid").text("替换的内容")
+
+# 5 退出
+	什么叫做登录了？session中有user对象。
+	实现步骤：
+		1.	访问servlet，将session销毁
+		2.	跳转到登录页面
+		
+		//1.销毁session
+		request.getSession().invalidate();
+		
+		//2.跳转登录页面(重定向)
+		response.sendRedirect(request.getContextPath()+"/login.html");
