@@ -26,7 +26,7 @@
                 $('#sub_btn').click(function () {
 					//2、ajax请求，提交表单数据
 					//三个参数，"url",表单中的参数,function (后端返回的数据)
-					$.post("loginServlet",$("#loginForm").serialize(),function (data) {
+					$.post("user/login",$("#loginForm").serialize(),function (data) {
 						//3、响应信息 data {flag:false,errorMsg:""}
 						if(data.flag){
 							//登录成功，跳转到首页

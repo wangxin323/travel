@@ -162,7 +162,7 @@
                     if (subflag) {
                         //ajax 异步提交表单，获取服务器响应的数据
                         //$(this).serialize() 将表单中的数据转为 username=zhangsan&password=123
-                        $.post("registUserServlet", $(this).serialize(), function (data) {
+                        $.post("user/regist", $(this).serialize(), function (data) {
                             //处理服务器响应的数据 data {flag:"false",msg:"注册失败"}
                             if (data.flag) {
                                 //注册成功，跳转到成功页面

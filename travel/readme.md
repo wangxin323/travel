@@ -76,3 +76,5 @@
 		
 		//2.跳转登录页面(重定向)
 		response.sendRedirect(request.getContextPath()+"/login.html");
+# 6 封装Servlet
+    获取访问路径的方法名，反射字节码；见 BaseServlet
