@@ -1,11 +1,26 @@
 <script>
-    //欢迎回来，admin
     //入口函数
     $(function () {
-        //ajax请求
+        //ajax请求,欢迎回来，admin
         $.get("user/findOne",{},function (data) {
             var msg = "欢迎回来，"+ data.username;
             $("#span_username").text(msg)
+        });
+
+        //ajax请求,导航栏分类
+        $.get("category/findAll",{},function (data) {
+            //查询数据库，后台响应的json文件为，[{cid:1,cname:"国内游"}{}{}]
+            var lis = '<li class="nav-active"><a href="index.html">首页</a></li>';
+            //遍历json数组
+            for(var i = 0;i<data.length;i++){
+                var li = '<li><a href="route_list.html">'+data[i].cname+'</a></li>';
+                //拼接字符串
+                lis += li;
+            }
+            lis += '<li><a href="favoriterank.html">收藏排行榜</a></li>';
+
+            //将lis字符串，设置到ul的html中
+            $('#category').html(lis);
         });
     });
 
@@ -53,17 +68,17 @@
 <!-- 头部 end -->
 <!-- 首页导航 -->
 <div class="navitem">
-    <ul class="nav">
-        <li class="nav-active"><a href="index.html">首页</a></li>
-        <li><a href="route_list.html">门票</a></li>
-        <li><a href="route_list.html">酒店</a></li>
-        <li><a href="route_list.html">香港车票</a></li>
-        <li><a href="route_list.html">出境游</a></li>
-        <li><a href="route_list.html">国内游</a></li>
-        <li><a href="route_list.html">港澳游</a></li>
-        <li><a href="route_list.html">抱团定制</a></li>
-        <li><a href="route_list.html">全球自由行</a></li>
-        <li><a href="favoriterank.html">收藏排行榜</a></li>
+    <ul id = "category" class="nav">
+        <!--<li class="nav-active"><a href="index.html">首页</a></li>-->
+        <!--<li><a href="route_list.html">门票</a></li>-->
+        <!--<li><a href="route_list.html">酒店</a></li>-->
+        <!--<li><a href="route_list.html">香港车票</a></li>-->
+        <!--<li><a href="route_list.html">出境游</a></li>-->
+        <!--<li><a href="route_list.html">国内游</a></li>-->
+        <!--<li><a href="route_list.html">港澳游</a></li>-->
+        <!--<li><a href="route_list.html">抱团定制</a></li>-->
+        <!--<li><a href="route_list.html">全球自由行</a></li>-->
+        <!--<li><a href="favoriterank.html">收藏排行榜</a></li>-->
     </ul>
 </div>
     

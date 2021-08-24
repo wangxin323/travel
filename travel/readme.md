@@ -78,3 +78,13 @@
 		response.sendRedirect(request.getContextPath()+"/login.html");
 # 6 封装Servlet
     获取访问路径的方法名，反射字节码；见 BaseServlet
+    
+# 7 从数据库中获取导航栏分类内容
+    1、使用MySQL数据库
+        1、后端：将从数据库中查询的数据序列化为json文件
+        2、前端：ajax异步请求，将后端获取的json文件，以字符串的形式拼接
+    2、优化，使用redis缓存，减少MySQL数据库的访问次数
+        1、redis中没有数据，则从数据库中查询，并将数据保存到redis中
+        2、如果有有数据，则直接返回
+            此处使用sortset存储的结果，方法返回的是list，因此需要将set集合中的数据遍历存到list中
+        

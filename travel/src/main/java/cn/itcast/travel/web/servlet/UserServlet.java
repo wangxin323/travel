@@ -27,8 +27,6 @@ public class UserServlet extends BaseServlet {
 
     //成员变量(声明业务对象)
     private UserService service = new UserServiceImpl();
-    //序列化json对象
-    private ObjectMapper mapper = new ObjectMapper();
     //设置登录失败时的响应信息
     private ResultInfo info = new ResultInfo();
 
@@ -59,7 +57,7 @@ public class UserServlet extends BaseServlet {
             info.setFlag(false);
             info.setErrorMsg("验证码错误");
             //将info序列化为json数据
-            String json = mapper.writeValueAsString(info);
+            String json = writrValueAsStringForJson(info, response);
 
             //将json数据写回客户端
             //设置content-type
@@ -98,7 +96,7 @@ public class UserServlet extends BaseServlet {
 
 
         //将info序列化为json数据
-        String json = mapper.writeValueAsString(info);
+        String json = writrValueAsStringForJson(info, response);
 
         //将json数据写回客户端
         //设置content-type
@@ -167,7 +165,7 @@ public class UserServlet extends BaseServlet {
         //设置编码格式
         response.setContentType("application/json;charset=utf-8");
         //响应数据，序列化为json
-        mapper.writeValue(response.getOutputStream(), info);
+        writrValueForJson(info, response);
 
         //将登录的用户信息存入session
         session.setAttribute("user", u);
