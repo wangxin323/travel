@@ -87,4 +87,18 @@
         1、redis中没有数据，则从数据库中查询，并将数据保存到redis中
         2、如果有有数据，则直接返回
             此处使用sortset存储的结果，方法返回的是list，因此需要将set集合中的数据遍历存到list中
-        
+# 8、分页查询
+	1、PageBean 类
+	    private int totalCount; //总记录数 通过数据库查询
+	    private int totalPage; //总记页数 计算
+	    private int currentPage; //当前页码 ； 客户端提交
+	    private int pageSize; //每页显示的条数 ；客户端提交
+		private List<T> list; //每页显示的数据集合
+	2、分页查询 limit start, pageSize
+		start 分页的起始位置 = (currentPage - 1)*pageSize
+	3、location.search; 获取连接中?后面的值  ?cid=4
+	4、每次展示的页码前5后4
+	5、ajax 异步获取后台封装的json数据
+	6、request.getParameter("参数名"); 获取前端传入参数
+	7、window.scrollTo(0,0); 定位到页面的位置
+	
