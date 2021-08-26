@@ -1,0 +1,13 @@
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+lib
+gen
+UserInfo
+轨迹查询
+
+# Project exclude paths
+/travel/target/

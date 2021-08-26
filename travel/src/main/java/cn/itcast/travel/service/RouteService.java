@@ -17,5 +17,5 @@ public interface RouteService {
      * @param pageSize  每页显示的条数
      * @return
      */
-    public PageBean<Route> pageQuery(int cid, int currentPage, int pageSize);
+    public PageBean<Route> pageQuery(int cid, int currentPage, int pageSize, String rname);
 }

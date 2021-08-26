@@ -33,13 +33,17 @@ public class RouteServlet extends BaseServlet {
         String currentPageStr = request.getParameter("currentPage"); //当前页码
         String pageSizeStr = request.getParameter("pageSize"); //每页显示的条数
         String cidStr = request.getParameter("cid");  //类别id
-        System.out.println(currentPageStr);
-        System.out.println(pageSizeStr);
-        System.out.println(cidStr);
+        
+        //获取用户输入的rname，路线名称
+        String rname = request.getParameter("rname");
+        //解决tomcat中文乱码问题
+        if(rname != null){
+            rname = new String(rname.getBytes("iso-8859-1"),"utf-8");
+        }
 
         //2 处理参数
         int cid = 0; //类别id
-        if(cidStr != null && cidStr.length() >0){
+        if(cidStr != null && cidStr.length() >0 && !"null".equals(cidStr)){
             cid = Integer.parseInt(cidStr);
         }
 
@@ -58,7 +62,7 @@ public class RouteServlet extends BaseServlet {
         }
 
         //3 调用service 完成查询
-        PageBean<Route> routePageBean = routeService.pageQuery(cid, currentPage, pageSize);
+        PageBean<Route> routePageBean = routeService.pageQuery(cid, currentPage, pageSize,rname);
         //4 序列化数据为json
         writrValueForJson(routePageBean, response);
     }

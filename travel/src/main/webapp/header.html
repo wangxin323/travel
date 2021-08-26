@@ -1,3 +1,5 @@
+<!--引入URL获取值-->
+<script src="js/getParameter.js"></script>
 <script>
     //入口函数
     $(function () {
@@ -7,20 +9,44 @@
             $("#span_username").text(msg)
         });
 
-        //ajax请求,导航栏分类
+        //ajax请求,导航栏分类,查询分类
         $.get("category/findAll",{},function (data) {
             //查询数据库，后台响应的json文件为，[{cid:1,cname:"国内游"}{}{}]
-            var lis = '<li class="nav-active"><a href="index.html">首页</a></li>';
+            var lis = '';
+            if(location.pathname.split("/")[2] === ("index.html")){
+                lis += '<li class="nav-active"><a href="index.html">首页</a></li>';
+            }else{
+                lis += '<li><a href="index.html">首页</a></li>';
+            }
             //遍历json数组
             for(var i = 0;i<data.length;i++){
-                var li = '<li><a href="route_list.html?cid='+data[i].cid+'">'+data[i].cname+'</a></li>';
+                if (getParameter("cid") == i+1){
+                    var li = '<li class="nav-active"><a href="route_list.html?cid='+data[i].cid+'">'+data[i].cname+'</a></li>';
+                }else{
+                    var li = '<li><a href="route_list.html?cid='+data[i].cid+'">'+data[i].cname+'</a></li>';
+                }
                 //拼接字符串
                 lis += li;
             }
-            lis += '<li><a href="favoriterank.html">收藏排行榜</a></li>';
-
+            if(location.pathname.split("/")[2] === ("favoriterank.html")){
+                lis += '<li class="nav-active"><a href="favoriterank.html">收藏排行榜</a></li>';
+            }else {
+                lis += '<li><a href="favoriterank.html">收藏排行榜</a></li>';
+            }
             //将lis字符串，设置到ul的html中
             $('#category').html(lis);
+        });
+
+        //搜索框,绑定单击事件
+        $('#search-button').click(function () {
+            //获取搜索框的值
+            var rname = $('#search_input').val();
+            //获取cid
+            var cid = getParameter("cid");
+            // alert(cid);
+            // alert(rname);
+            //设置跳转路径
+            location.href = "http://localhost/travel/route_list.html?cid="+cid+"&rname="+rname;
         });
     });
 
@@ -47,11 +73,11 @@
     <div class="header_wrap">
         <div class="topbar">
             <div class="logo">
-                <a href="/"><img src="images/logo.jpg" alt=""></a>
+                <a href="index.html"><img src="images/logo.jpg" alt=""></a>
             </div>
             <div class="search">
-                <input name="" type="text" placeholder="请输入路线名称" class="search_input" autocomplete="off">
-                <a href="javascript:;" class="search-button">搜索</a>
+                <input name="" type="text" id = "search_input" placeholder="请输入路线名称" class="search_input" autocomplete="off">
+                <a href="javascript:;" id = "search-button" class="search-button">搜索</a>
             </div>
             <div class="hottel">
                 <div class="hot_pic">

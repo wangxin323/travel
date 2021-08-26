@@ -26,11 +26,11 @@ public class RouteServiceImpl implements RouteService {
      * @return
      */
     @Override
-    public PageBean<Route> pageQuery(int cid, int currentPage, int pageSize) {
+    public PageBean<Route> pageQuery(int cid, int currentPage, int pageSize, String rname) {
         //创建PageBean 对象
         PageBean pb = new PageBean();
         //设置总记录数
-        int totalCount = routeDao.findTotalCount(cid);
+        int totalCount = routeDao.findTotalCount(cid, rname);
         pb.setTotalCount(totalCount);
 
         //设置总页数
@@ -45,7 +45,7 @@ public class RouteServiceImpl implements RouteService {
 
         //设置每页的数据
         int start = (currentPage - 1) * pageSize;
-        List<Route> list = routeDao.findByPage(cid, start, pageSize);
+        List<Route> list = routeDao.findByPage(cid, start, pageSize, rname);
         pb.setList(list);
 
         return pb;

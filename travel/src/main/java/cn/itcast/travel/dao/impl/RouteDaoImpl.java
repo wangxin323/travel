@@ -6,6 +6,7 @@ import cn.itcast.travel.util.JDBCUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,15 +19,33 @@ public class RouteDaoImpl implements RouteDao {
 
     /**
      * 根据id查询总记录数
-     *
+     * 组合查询
      * @param cid
      * @return
      */
     @Override
-    public int findTotalCount(int cid) {
+    public int findTotalCount(int cid, String rname) {
         //定义sql
-        String sql = "select count(*) from tab_route where cid = ?";
-        Integer totalCount = template.queryForObject(sql, Integer.class, cid);
+        // String sql = "select count(*) from tab_route where cid = ?";
+
+        String sql = "select count(*) from tab_route where 1 = 1 ";
+        StringBuffer sb = new StringBuffer(sql);
+        //参数数组
+        List params = new ArrayList();
+        if(cid != 0){
+            sb.append(" and cid = ?");
+
+            params.add(cid); // 添加?对应位置的参数
+        }
+        if(rname != null && rname.length() > 0){
+            sb.append(" and rname like ?");
+            params.add("%"+rname+"%");
+        }
+
+        //将SQL转为string
+        sql = sb.toString();
+
+        Integer totalCount = template.queryForObject(sql, Integer.class, params.toArray());
         return totalCount;
     }
 
@@ -38,9 +57,32 @@ public class RouteDaoImpl implements RouteDao {
      * @return
      */
     @Override
-    public List<Route> findByPage(int cid, int start, int pageSize) {
-        String sql = "select * from tab_route where cid = ? limit ?, ?";
-        List<Route> list = template.query(sql, new BeanPropertyRowMapper<>(Route.class), cid, start, pageSize);
+    public List<Route> findByPage(int cid, int start, int pageSize, String rname) {
+        // String sql = "select * from tab_route where cid = ? limit ?, ?";
+
+        String sql = "select * from tab_route where 1 = 1 ";
+        StringBuffer sb = new StringBuffer(sql);
+        //参数数组
+        List params = new ArrayList();
+        if(cid != 0){
+            sb.append(" and cid = ?");
+
+            params.add(cid); // 添加?对应位置的参数
+        }
+        if(rname != null && rname.length() > 0){
+            sb.append(" and rname like ?");
+            //"%"引号内不能有空格，否则查询不出来
+            params.add("%"+rname+"%");
+        }
+
+        sb.append(" limit ?, ?");
+        //将SQL转为string
+        sql = sb.toString();
+
+        params.add(start);
+        params.add(pageSize);
+
+        List<Route> list = template.query(sql, new BeanPropertyRowMapper<>(Route.class), params.toArray());
         return list;
     }
 }
