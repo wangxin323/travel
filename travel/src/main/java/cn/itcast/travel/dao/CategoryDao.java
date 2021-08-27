@@ -13,4 +13,6 @@ public interface CategoryDao {
      * 查询所有种类
      */
     public List<Category> findAll();
+
+    public Category findOne(int cid);
 }

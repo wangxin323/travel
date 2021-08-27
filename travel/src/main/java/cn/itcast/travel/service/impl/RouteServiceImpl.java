@@ -1,13 +1,13 @@
 package cn.itcast.travel.service.impl;
 
+import cn.itcast.travel.dao.CategoryDao;
 import cn.itcast.travel.dao.RouteDao;
-import cn.itcast.travel.dao.impl.RouteDaoImpl;
-import cn.itcast.travel.domain.PageBean;
-import cn.itcast.travel.domain.Route;
+import cn.itcast.travel.dao.RouteImgDao;
+import cn.itcast.travel.dao.SellerDao;
+import cn.itcast.travel.dao.impl.*;
+import cn.itcast.travel.domain.*;
 import cn.itcast.travel.service.RouteService;
-import com.sun.tools.javadoc.Start;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,6 +17,12 @@ import java.util.List;
 public class RouteServiceImpl implements RouteService {
     // 创建Dao对象
     RouteDao routeDao = new RouteDaoImpl();
+
+    RouteImgDao routeImgDao = new RouteImgDaoImpl();
+
+    SellerDao sellerDao = new SellerDaoImpl();
+
+    CategoryDao categoryDao = new CategoryDaoImpl();
 
     /**
      * 分页查询
@@ -49,5 +55,29 @@ public class RouteServiceImpl implements RouteService {
         pb.setList(list);
 
         return pb;
+    }
+
+    /**
+     * 查询一条记录
+     * @param rid
+     * @return
+     */
+    @Override
+    public Route findOne(String rid) {
+        //查询tab_route 表中的一条记录
+        Route route = routeDao.findOne(Integer.parseInt(rid));
+        //从tab_route_img 表中查询图片
+        List<RouteImg> list = routeImgDao.findByRid(route.getRid());
+        route.setRouteImgList(list);
+        //从tab_serller表中查询商家信息
+        Seller seller = sellerDao.findByRid(route.getSid());
+        route.setSeller(seller);
+        return route;
+    }
+
+    public String findCname(int cid){
+        Category category = categoryDao.findOne(cid);
+        String cname = category.getCname();
+        return cname;
     }
 }

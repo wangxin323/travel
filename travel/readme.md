@@ -109,4 +109,12 @@
     4、修改分页查询
     5、逻辑判断修改导航栏激活状态
     6、location.pathname，获取URL路径，通过字符串分割获取当前页面
-	
+# 10、路线详细信息
+    1、获取rid，客户端获取
+    2、根据rid，查询tab_route表，获取一条路线的信息，返回route对象
+    3、根据rid, 查询tab_route_img表，获取一条路线的图片，返回图片列表
+    4、根据sid，查询tab_seller表，获取商家信息，返回seller对象
+        1-4可以封装为一个route对象。
+    5、根据cid（从route对象中获取），查询tab_categroy表，获取分类名字cname，返回字符串
+        单独一个方法
+    6、RouteServlet中定义findOne方法,将两个对象存储在map中，然后序列化为json数据，回写给客户端

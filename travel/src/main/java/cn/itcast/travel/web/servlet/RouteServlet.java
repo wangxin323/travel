@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author wangxin
@@ -65,5 +68,34 @@ public class RouteServlet extends BaseServlet {
         PageBean<Route> routePageBean = routeService.pageQuery(cid, currentPage, pageSize,rname);
         //4 序列化数据为json
         writrValueForJson(routePageBean, response);
+    }
+
+    /**
+     * 查询一条记录
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void findOne(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
+        //获取rid
+        String rid = request.getParameter("rid");
+        if(rid == null || rid.length() == 0){
+            rid = "1";
+        }
+        //调用service完成查询
+        Route route = routeService.findOne(rid);
+
+        //根据cid查询cname
+        String cname = routeService.findCname(route.getCid());
+
+        //拼接对象route 和 cname
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("route", route);
+        map.put("cname", cname);
+        //将route对象序列化为json
+        // writrValueForJson(route, response);
+        // writrValueForJson(list, response);
+        writrValueForJson(map, response);
     }
 }
