@@ -2,7 +2,10 @@ package cn.itcast.travel.web.servlet;
 
 import cn.itcast.travel.domain.PageBean;
 import cn.itcast.travel.domain.Route;
+import cn.itcast.travel.domain.User;
+import cn.itcast.travel.service.FavoriteService;
 import cn.itcast.travel.service.RouteService;
+import cn.itcast.travel.service.impl.FavoriteServiceImpl;
 import cn.itcast.travel.service.impl.RouteServiceImpl;
 
 import javax.servlet.ServletException;
@@ -24,6 +27,7 @@ public class RouteServlet extends BaseServlet {
 
     //service对象
     private RouteService routeService = new RouteServiceImpl();
+    private FavoriteService favoriteService = new FavoriteServiceImpl();
     /**
      * 分页查询
      * @param request
@@ -97,5 +101,61 @@ public class RouteServlet extends BaseServlet {
         // writrValueForJson(route, response);
         // writrValueForJson(list, response);
         writrValueForJson(map, response);
+    }
+
+    /**
+     * 判断用户是否收藏
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void isFavorite(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //从前端获取rid
+        String rid = request.getParameter("rid");
+
+        //从session中获取user对象
+        User user = (User) request.getSession().getAttribute("user");
+
+        int uid;
+        if(user == null){
+            //用户没有登录
+            uid = 0;
+        }else {
+            //用户已经登录
+            uid = user.getUid();
+        }
+
+        boolean flag = favoriteService.findByRidandUid(rid, uid);
+
+        //序列化为json，回写给客户点
+        writrValueForJson(flag, response);
+    }
+
+    /**
+     * 判断用户是否收藏
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void addFavorite(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //从前端获取rid
+        String rid = request.getParameter("rid");
+
+        //从session中获取user对象
+        User user = (User) request.getSession().getAttribute("user");
+
+        int uid;
+        if(user == null){
+            //用户没有登录
+            return;
+        }else {
+            //用户已经登录
+            uid = user.getUid();
+        }
+
+        favoriteService.add(rid, uid);
+
     }
 }

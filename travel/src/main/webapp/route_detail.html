@@ -17,16 +17,16 @@
             <div class="bread_box">
                 <a href="index.html">首页</a>
                 <span> &gt;</span>
-                <a id = "wrap1a" href="">国内游</a><span> &gt;</span>
-                <a id = "wrap2a" href="#">全国-曼谷6-7天自由行 泰国出境旅游 特价往返机票自由行二次确认</a>
+                <a id="wrap1a" href="">国内游</a><span> &gt;</span>
+                <a id="wrap2a" href="#">全国-曼谷6-7天自由行 泰国出境旅游 特价往返机票自由行二次确认</a>
             </div>
             <div class="prosum_box">
                 <dl class="prosum_left">
-                    <dt id = "dt">
+                    <dt id="dt">
                         <img alt="" class="big_img"
                              src="http://www.jinmalvyou.com/Public/uploads/goods_img/img_size4/201703/m49788843d72171643297ccc033d9288ee.jpg">
                     </dt>
-                    <dd id = "dd">
+                    <dd id="dd">
                         <a class="up_img up_img_disable"></a>
                         <a title="" class="little_img"
                            data-bigpic="http://www.jinmalvyou.com/Public/uploads/goods_img/img_size4/201703/m40920d0669855e745d97f9ad1df966ebb.jpg">
@@ -73,20 +73,21 @@
                     </dd>
                 </dl>
                 <div class="prosum_right">
-                    <p class="pros_title" id = "rname">【尾单特卖】全国-曼谷6-7天自由行 泰国出境旅游 特价往返机票自由行二次确认</p>
-                    <p class="hot" id = "routeIntroduce">1-2月出发，网付立享￥1099/2人起！爆款位置有限，抢完即止！</p>
+                    <p class="pros_title" id="rname">【尾单特卖】全国-曼谷6-7天自由行 泰国出境旅游 特价往返机票自由行二次确认</p>
+                    <p class="hot" id="routeIntroduce">1-2月出发，网付立享￥1099/2人起！爆款位置有限，抢完即止！</p>
                     <div class="pros_other">
-                        <p>经营商家 ：<span id = "sname">黑马国旅</span></p>
-                        <p>咨询电话 : <span id = "consphone">12345678901</span></p>
-                        <p>地址 ： <span id = "address">传智播客javaEE学院</span></p>
+                        <p>经营商家 ：<span id="sname">黑马国旅</span></p>
+                        <p>咨询电话 : <span id="consphone">12345678901</span></p>
+                        <p>地址 ： <span id="address">传智播客javaEE学院</span></p>
                     </div>
                     <div class="pros_price">
-                        <p class="price"><strong id = "price">¥2699.00</strong><span>起</span></p>
+                        <p class="price"><strong id="price">¥2699.00</strong><span>起</span></p>
                         <p class="collect">
-                            <a class="btn"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
+                            <a class="btn" id="favorite" onclick="addFavorite();"><i
+                                    class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
 
-                            <a class="btn already" disabled="disabled"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
-                            <span>已收藏100次</span>
+                            <!-- <a class="btn already" disabled="disabled"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>-->
+                            <span id="favoriteCount">已收藏100次</span>
                         </p>
                     </div>
                 </div>
@@ -162,7 +163,7 @@
                 }
             }
 
-            function goImg(){
+            function goImg() {
                 //点击图片切换图片
                 $('.little_img').on('mousemove', function () {
                     $('.little_img').removeClass('cur_img');
@@ -198,18 +199,19 @@
                 //获取rid
                 var rid = getParameter("rid");
                 //发送请求
-                $.get("route/findOne",{rid:rid},function (data) {
+                $.get("route/findOne", {rid: rid}, function (data) {
                     // alert(data.cname);
-                    $('#wrap1a').attr("href",("http://localhost/travel/route_list.html?cid="+data.route.cid+""));
+                    $('#wrap1a').attr("href", ("http://localhost/travel/route_list.html?cid=" + data.route.cid + ""));
                     $("#wrap1a").text(data.cname);
                     // $('#wrap1a').html(data.cname);
                     $('#wrap2a').html(data.route.rname);
                     $('#rname').html(data.route.rname);
-                    $('#price').html("¥"+data.route.price);
+                    $('#price').html("¥" + data.route.price);
                     $('#routeIntroduce').html(data.route.routeIntroduce);
                     $('#sname').html(data.route.seller.sname);
                     $('#consphone').html(data.route.seller.consphone);
                     $('#address').html(data.route.seller.address);
+                    $('#favoriteCount').html("已收藏"+data.route.count+"次");
 
                     //展示图片,拼接字符串
                     /*
@@ -226,17 +228,17 @@
 
                     //遍历图片
                     for (var i = 0; i < data.route.routeImgList.length; i++) {
-                        var dt ='<img alt="" class="big_img" src="'+data.route.routeImgList[0].bigPic+'">';
+                        var dt = '<img alt="" class="big_img" src="' + data.route.routeImgList[0].bigPic + '">';
                         var astr;
-                        if(i >= 4){
+                        if (i >= 4) {
                             astr = '<a title="" class="little_img"\n' +
-                                '     data-bigpic="'+data.route.routeImgList[i].bigPic+'" style="display:none;">' +
-                                '      <img src="'+data.route.routeImgList[i].bigPic+'">' +
+                                '     data-bigpic="' + data.route.routeImgList[i].bigPic + '" style="display:none;">' +
+                                '      <img src="' + data.route.routeImgList[i].bigPic + '">' +
                                 '  </a>'
-                        }else {
+                        } else {
                             astr = '<a title="" class="little_img"\n' +
-                                '     data-bigpic="'+data.route.routeImgList[i].bigPic+'">' +
-                                '      <img src="'+data.route.routeImgList[i].bigPic+'">' +
+                                '     data-bigpic="' + data.route.routeImgList[i].bigPic + '">' +
+                                '      <img src="' + data.route.routeImgList[i].bigPic + '">' +
                                 '  </a>'
                         }
                         ddstr += astr;
@@ -249,6 +251,37 @@
                     goImg();
                 })
             });
+
+            //收藏路线
+            $(function () {
+                var rid = getParameter("rid");
+                $.get("route/isFavorite", {rid: rid}, function (flag) {
+                    if (flag) {
+                        //已经收藏
+                        $('#favorite').addClass("already");
+                        $('#favorite').attr("disabled", "disabled");
+                    } else {
+                        //没有收藏
+                    }
+                })
+            });
+
+            function addFavorite() {
+                var rid = getParameter("rid");
+                $.get("user/findOne",{},function (user) {
+                    if(user){
+                        //用户已经登录
+                        $.get("route/addFavorite",{rid:rid},function () {
+                            //刷新页面
+                            location.reload();
+                        })
+                    }else {
+                        //用户没有登录
+                        alert("您尚未登录，请登录！");
+                        location.href = "http://localhost/travel/login.html"
+                    }
+                })
+            }
         </script>
     </body>
 

@@ -154,6 +154,8 @@ public class UserServlet extends BaseServlet {
             }
             //登录成功
             if(u != null && u.getStatus().equalsIgnoreCase("Y")){
+                //将登录的用户信息存入session
+                session.setAttribute("user", u);
                 info.setFlag(true);
             }
         }else{
@@ -166,9 +168,6 @@ public class UserServlet extends BaseServlet {
         response.setContentType("application/json;charset=utf-8");
         //响应数据，序列化为json
         writrValueForJson(info, response);
-
-        //将登录的用户信息存入session
-        session.setAttribute("user", u);
     }
 
     /**

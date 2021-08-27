@@ -126,3 +126,10 @@
            $('#search-button').triggerHandler('click');
        }
     });
+
+# 12、实现收藏功能
+    1、当页面加载完成后，发送ajax请求，获取用户是否收藏的标记。根据标记，展示不同的按钮样式
+    2、发送ajax请求，判断用户是否登录，从session中获取user对象
+    3、根据rid 和 uid 查询tab_favorite，判断是否收藏
+    4、根据rid更新count
+    

@@ -33,4 +33,17 @@ public interface RouteDao {
      * @return
      */
     public Route findOne(int rid);
+
+    /**
+     * 查询收藏次数
+     * @param rid
+     * @return
+     */
+    int findCountByRid(int rid);
+
+    /**
+     * 根据rid更新count
+     * @param rid
+     */
+    void updateCountByRid(int rid);
 }

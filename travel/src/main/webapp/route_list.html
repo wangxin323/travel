@@ -110,10 +110,11 @@
 
                     //遍历pb
                     for (var i = begin; i <= end; i++) {
+                        var li;
                         //判断是否是当前页
                         if (pb.currentPage == i) {
                             if(rname != null){
-                                var li =
+                                li =
                                     '<li class="curPage"><a href="javascript:load(' + cid + ',' + i + ',\'' + rname + '\');">' + i + '</a></li>';
                             }else{
                                 li ='<li class="curPage"><a href="javascript:load(' + cid + ',' + i + ');">' + i + '</a></li>';
@@ -175,7 +176,6 @@
                         route_lis += li;
                     }
                     $('#route').html(route_lis);
-
                     //加载完数据，定位到指定位置
                     window.scrollTo(0, 0);
                 });

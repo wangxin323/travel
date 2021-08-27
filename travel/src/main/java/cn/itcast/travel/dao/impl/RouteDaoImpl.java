@@ -98,4 +98,19 @@ public class RouteDaoImpl implements RouteDao {
         Route route = template.queryForObject(sql, new BeanPropertyRowMapper<>(Route.class), rid);
         return route;
     }
+
+    @Override
+    public int findCountByRid(int rid) {
+        String sql = "select count from tab_route where rid = ?";
+        Integer count = template.queryForObject(sql, Integer.class, rid);
+        return count;
+    }
+
+    @Override
+    public void updateCountByRid(int rid) {
+        int count = findCountByRid(rid);
+        String sql = "update tab_route set count = ? where rid = ?";
+        count+=1;
+        template.update(sql, count, rid);
+    }
 }

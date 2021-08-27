@@ -72,6 +72,9 @@ public class RouteServiceImpl implements RouteService {
         //从tab_serller表中查询商家信息
         Seller seller = sellerDao.findByRid(route.getSid());
         route.setSeller(seller);
+        //查询收藏次数
+        int count = routeDao.findCountByRid(route.getRid());
+        route.setCount(count);
         return route;
     }
 
