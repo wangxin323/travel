@@ -118,3 +118,11 @@
     5、根据cid（从route对象中获取），查询tab_categroy表，获取分类名字cname，返回字符串
         单独一个方法
     6、RouteServlet中定义findOne方法,将两个对象存储在map中，然后序列化为json数据，回写给客户端
+    
+# 11、实现按enter键搜索
+    //实现按enter时搜索
+    $(document).keydown(function (event) {
+       if(event.keyCode == 13){
+           $('#search-button').triggerHandler('click');
+       }
+    });
