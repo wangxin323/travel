@@ -35,7 +35,7 @@ public class CategroyServiceImpl implements CategoryService {
         List<Category> cs = null;
         //2 判断categorys是否为空
         if(categorys == null || categorys.size() ==0){
-            System.out.println("从数据库中查询....");
+            // System.out.println("从数据库中查询....");
             //如果为空，则从数据库中查询
             cs = categoryDao.findAll();
             //将查询的结果存入jedis
@@ -43,7 +43,7 @@ public class CategroyServiceImpl implements CategoryService {
                 jedis.zadd("category",cs.get(i).getCid() ,cs.get(i).getCname());
             }
         }else {
-            System.out.println("从redis中查询....");
+            // System.out.println("从redis中查询....");
             //如果不为空，将sortset中的数据存list
             cs = new ArrayList<>();
             //遍历categorys

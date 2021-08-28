@@ -68,7 +68,7 @@ public class RouteServlet extends BaseServlet {
         }else {
             currentPage = 1;
         }
-        System.out.println("currentPage:" + currentPage);
+        // System.out.println("currentPage:" + currentPage);
         //3 调用service 完成查询
         PageBean<Route> routePageBean = routeService.pageQuery(cid, currentPage, pageSize,rname);
         //4 序列化数据为json
@@ -158,5 +158,117 @@ public class RouteServlet extends BaseServlet {
 
         favoriteService.add(rid, uid);
 
+    }
+
+    /**
+     * 查询人气旅游
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void findPopular(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //调用service 查询
+        List<Route> countList = routeService.findByCount();
+        //序列化json 回写给客户端
+        writrValueForJson(countList, response);
+    }
+
+    /**
+     * 查询人气旅游
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void findNewest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //调用service 查询
+        List<Route> newList = routeService.findByRdate();
+        //序列化json 回写给客户端
+        writrValueForJson(newList, response);
+    }
+
+    /**
+     * 随机查询四条
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void findTheme(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //调用service 查询
+        List<Route> themeList = routeService.findTheme();
+        //序列化json 回写给客户端
+        writrValueForJson(themeList, response);
+    }
+
+    /**
+     * 国内游
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void findGn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //调用service 查询
+        List<Route> GnList = routeService.findGnByCid();
+        //序列化json 回写给客户端
+        writrValueForJson(GnList, response);
+    }
+
+    /**
+     * 出境游
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void findCj(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //调用service 查询
+        List<Route> CjList = routeService.findCjByCid();
+        //序列化json 回写给客户端
+        writrValueForJson(CjList, response);
+    }
+
+    /**
+     * 收藏排行榜分页查询
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void favoritePage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //从前端获取参数
+        String currentPageStr = request.getParameter("currentPage");//当前页面
+        String rname = request.getParameter("rname");   // 线路名
+        String beginPriceStr = request.getParameter("beginPrice");//起步金额
+        String endPriceStr = request.getParameter("endPrice");//终止金额
+
+        //解决tomcat中文乱码问题
+        if(rname != null){
+            rname = new String(rname.getBytes("iso-8859-1"),"utf-8");
+        }
+        System.out.println(rname);
+        int currentPage = 0;    //当前页码
+        if(currentPageStr != null && currentPageStr.length() >0){
+            currentPage = Integer.parseInt(currentPageStr);
+        }else {
+            currentPage = 1;
+        }
+        int beginPrice=0;    //当前页码
+        if(beginPriceStr != null && beginPriceStr.length() >0){
+            beginPrice = Integer.parseInt(beginPriceStr);
+        }
+        int endPrice=0;    //当前页码
+        if(endPriceStr != null && endPriceStr.length() >0){
+            endPrice = Integer.parseInt(endPriceStr);
+        }
+        int pageSize = 8;
+        // System.out.println("currentPage:" + currentPage);
+        //3 调用service 完成查询
+        //findCountByPage(int currentPage, int pageSize, String rname, int beginPrice, int endPrice)
+        PageBean<Route> countByPage = routeService.findCountByPage(currentPage, pageSize, rname, beginPrice, endPrice);
+        //4 序列化数据为json
+        writrValueForJson(countByPage, response);
     }
 }

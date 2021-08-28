@@ -78,9 +78,91 @@ public class RouteServiceImpl implements RouteService {
         return route;
     }
 
+    /**
+     * 根据cid查询cname
+     * @param cid
+     * @return
+     */
     public String findCname(int cid){
         Category category = categoryDao.findOne(cid);
         String cname = category.getCname();
         return cname;
+    }
+
+    /**
+     * 查询人气旅游，count前四名
+     * @return
+     */
+    @Override
+    public List<Route> findByCount() {
+        return routeDao.findByCount();
+    }
+
+    /**
+     * 查询最新四条路线
+     * @return
+     */
+    @Override
+    public List<Route> findByRdate() {
+        return routeDao.findByRdate();
+    }
+
+    /**
+     * 随机查询四条
+     * @return
+     */
+    @Override
+    public List<Route> findTheme() {
+        return routeDao.findTheme();
+    }
+
+    /**
+     * 国内游
+     * @return
+     */
+    @Override
+    public List<Route> findGnByCid() {
+        return routeDao.findGnByCid();
+    }
+
+    /**
+     * 出境游
+     * @return
+     */
+    @Override
+    public List<Route> findCjByCid() {
+        return routeDao.findCjByCid();
+    }
+
+    /**
+     * 收藏排行榜分页查询
+     * @param currentPage 当前页码
+     * @param pageSize  每页展示的路线数
+     * @param rname 路线名字
+     * @param beginPrice    起步金额
+     * @param endPrice  终止金额
+     * @return
+     */
+    @Override
+    public PageBean<Route> findCountByPage(int currentPage, int pageSize, String rname, int beginPrice, int endPrice) {
+        //1、创建PageBean 对象
+        PageBean pb = new PageBean();
+        //设置总记录数
+        int totalCount = routeDao.findTotalCount(rname, beginPrice, endPrice);
+        pb.setTotalCount(totalCount);
+        //设置总页数
+        int totalPage = totalCount % pageSize == 0 ? totalCount / pageSize : (totalCount / pageSize) + 1;
+        pb.setTotalPage(totalPage);
+        //2、设置当前页
+        pb.setCurrentPage(currentPage);
+        //3设置pageSize
+        pb.setPageSize(pageSize);
+        //4、获取每页显示数据
+        //计算开始页
+        int start = (currentPage - 1) * pageSize;
+        List<Route> list = routeDao.findCountByPage(start, pageSize, rname, beginPrice, endPrice);
+        pb.setList(list);
+
+        return pb;
     }
 }
