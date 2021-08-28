@@ -16,12 +16,13 @@
             $(function () {
                 var cid = getParameter("cid");
                 var rname = getParameter("rname");
+                var currentPage = getParameter("currentPage");
                 //rname解码
                 if (rname != null) {
                     rname = window.decodeURIComponent(rname);
                 }
                 // alert(rname);
-                load(cid, null, rname)
+                load(cid, currentPage, rname)
             });
 
             function load(cid, currentPage, rname) {
@@ -53,10 +54,12 @@
                     var lis = "";
                     if (rname != null) {
                         //首页
-                        var firstLi = '<li><a href="javascript:load(' + cid + ',' + 1 + ',\'' + rname + '\');">首页</a></li>';
+                        var firstLi =
+                            '<li><a href="route_list.html?cid='+cid+'&currentPage='+1+'&rname='+rname+'">首页</a></li>';
                     } else {
                         //首页
-                        firstLi = '<li><a href="javascript:load(' + cid + ',' + 1 + ');">首页</a></li>';
+                        firstLi =
+                            '<li><a href="route_list.html?cid='+cid+'&currentPage='+1+'">首页</a></li>';
                     }
 
                     //上一页
@@ -69,10 +72,11 @@
                     if (rname != null) {
                         //上一页
                         var beforeLi =
-                            '<li class="threeword"><a href="javascript:load(' + cid + ',' + beforeNum + ',\'' + rname + '\');">上一页</a></li>';
+                            '<li class="threeword"><a href="route_list.html?cid='+cid+'&currentPage='+beforeNum+'&rname='+rname+'">上一页</a></li>';
                     } else {
                         //上一页
-                        beforeLi ='<li class="threeword"><a href="javascript:load(' + cid + ',' + beforeNum +');">上一页</a></li>';
+                        beforeLi
+                            ='<li class="threeword"><a href="route_list.html?cid='+cid+'&currentPage='+beforeNum+'">上一页</a></li>';
                     }
 
                     lis += firstLi;
@@ -112,18 +116,19 @@
                     for (var i = begin; i <= end; i++) {
                         var li;
                         //判断是否是当前页
-                        if (pb.currentPage == i) {
+                        if (pb.currentPage === i) {
                             if(rname != null){
+                                //route_list.html?cid=2&currentPage=10
                                 li =
-                                    '<li class="curPage"><a href="javascript:load(' + cid + ',' + i + ',\'' + rname + '\');">' + i + '</a></li>';
+                                    '<li class="curPage"><a href="route_list.html?cid='+cid+'&currentPage='+i+'&rname='+rname+'">' + i + '</a></li>';
                             }else{
-                                li ='<li class="curPage"><a href="javascript:load(' + cid + ',' + i + ');">' + i + '</a></li>';
+                                li ='<li class="curPage"><a href="route_list.html?cid='+cid+'&currentPage='+i+'">' + i + '</a></li>';
                             }
                         } else {
                             if(rname != null){
-                                li = '<li><a href="javascript:load(' + cid + ',' + i + ',\'' + rname + '\');">' + i +'</a></li>';
+                                li = '<li><a href="route_list.html?cid='+cid+'&currentPage='+i+'&rname='+rname+'">' + i +'</a></li>';
                             }else {
-                                li = '<li><a href="javascript:load(' + cid + ',' + i + ');">' + i +'</a></li>';
+                                li = '<li><a href="route_list.html?cid='+cid+'&currentPage='+i+'">' + i +'</a></li>';
                             }
                         }
                         lis += li;
@@ -136,15 +141,16 @@
                     }
                     if(rname != null){
                         var nextLi =
-                            '<li class="threeword"><a href="javascript:load(' + cid + ',' + nextNum + ',\'' + rname + '\');">下一页</a></li>';
+                            '<li class="threeword"><a href="route_list.html?cid='+cid+'&currentPage='+nextNum+'&rname='+rname+'">下一页</a></li>';
                     }else {
-                        nextLi ='<li class="threeword"><a href="javascript:load(' + cid + ',' + nextNum + ');">下一页</a></li>';
+                        nextLi
+                            ='<li class="threeword"><a href="route_list.html?cid='+cid+'&currentPage='+nextNum+'">下一页</a></li>';
                     }
                     if (rname != null){
                         var lastLi =
-                            '<li class="threeword"><a href="javascript:load(' + cid + ',' + pb.totalPage + ',\'' + rname + '\');">末页</a></li>';
+                            '<li class="threeword"><a href="route_list.html?cid='+cid+'&currentPage='+pb.totalPage+'&rname='+rname+'">末页</a></li>';
                     }else {
-                        lastLi ='<li class="threeword"><a href="javascript:load(' + cid + ',' + pb.totalPage + ');">末页</a></li>';
+                        lastLi ='<li class="threeword"><a href="route_list.html?cid='+cid+'&currentPage='+pb.totalPage+'">末页</a></li>';
                     }
 
                     lis += nextLi;

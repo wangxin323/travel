@@ -133,3 +133,9 @@
     3、根据rid 和 uid 查询tab_favorite，判断是否收藏
     4、根据rid更新count
     
+# 13、修复网页中后退时直接跳转到第一页的Bug
+    1、修改URL添加currentPage参数
+    2、修改route_list中的js代码
+    3、在入口函数中，获取URL中的currentPage，并传入load函数中
+    4、修改a标签，将javascript:load() 改为 URL的拼接
+    

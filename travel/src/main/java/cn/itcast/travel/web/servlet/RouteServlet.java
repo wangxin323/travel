@@ -7,6 +7,7 @@ import cn.itcast.travel.service.FavoriteService;
 import cn.itcast.travel.service.RouteService;
 import cn.itcast.travel.service.impl.FavoriteServiceImpl;
 import cn.itcast.travel.service.impl.RouteServiceImpl;
+import org.omg.CORBA.ARG_OUT;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -67,7 +68,7 @@ public class RouteServlet extends BaseServlet {
         }else {
             currentPage = 1;
         }
-
+        System.out.println("currentPage:" + currentPage);
         //3 调用service 完成查询
         PageBean<Route> routePageBean = routeService.pageQuery(cid, currentPage, pageSize,rname);
         //4 序列化数据为json
