@@ -22,9 +22,13 @@
                     rname = window.decodeURIComponent(rname);
                 }
                 // alert(rname);
-                load(cid, currentPage, rname)
+                //分页查询
+                load(cid, currentPage, rname);
+                //热门推荐
+                hot(cid);
             });
 
+            //分页
             function load(cid, currentPage, rname) {
                 //ajax 请求，请求route/pageQuery,传递cid
                 //{cid:cid,currentPage:currentPage},json 格式的参数，传给后端。function (pb){接收后端的值}
@@ -186,6 +190,32 @@
                     window.scrollTo(0, 0);
                 });
             }
+
+            //热门推荐
+            function hot(cid) {
+                //ajax 请求
+                $.get("route/findHot",{cid:cid},function (hotList) {
+
+                    var hotli = '';
+
+                    //遍历后台查出的数据，hotList
+                    for (var i = 0; i < hotList.length; i++) {
+                        //拼接li
+                        var li = ' <li>\n' +
+                            '        <a href="route_detail.html?rid='+hotList[i].rid+'">\n' +
+                            '           <div class="left"><img src="'+hotList[i].rimage+'" alt=""></div>\n' +
+                            '           <div class="right">\n' +
+                            '               <p>'+hotList[i].rname+'</p>\n' +
+                            '               <p>网付价<span>&yen;<span>'+hotList[i].price+'</span>起</span>\n' +
+                            '               </p>\n' +
+                            '           </div>\n' +
+                            '         </a>\n' +
+                            '    </li>';
+                        hotli += li
+                    }
+                    $('#hot').html(hotli);
+                })
+            }
         </script>
     </head>
     <body>
@@ -240,7 +270,7 @@
                             <div class="hot">HOT</div>
                             <span>热门推荐</span>
                         </div>
-                        <ul>
+                        <ul id="hot">
                             <li>
                                 <div class="left"><img src="images/04-search_09.jpg" alt=""></div>
                                 <div class="right">

@@ -6,33 +6,152 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/common.css">
         <link rel="stylesheet" href="css/index.css">
-       <style>
-           .tab-content .row>div {
-            margin-top: 16px;
-           } 
-           .tab-content {
-            margin-bottom: 36px;
-           }
-       </style>
-       <script src="js/jquery-3.3.1.js"></script>
+        <style>
+            .tab-content .row > div {
+                margin-top: 16px;
+            }
+
+            .tab-content {
+                margin-bottom: 36px;
+            }
+        </style>
+        <script src="js/jquery-3.3.1.js"></script>
+        <script src="js/getParameter.js"></script>
+        <script>
+            //入口函数
+            $(function () {
+                var currentPage = getParameter("currentPage");
+                //先判断用户是否登录
+                $.get("user/findOne",{},function (user) {
+                    // alert(user.uid);
+                    var uid = user.uid;
+                    if(user){
+                        //用户已经登录
+                        load(uid,currentPage);
+                    }else {
+                        //用户没有登录
+                        alert("您尚未登录，请登录！");
+                        location.href = "http://localhost/travel/login.html"
+                    }
+                });
+
+            });
+
+            function load(uid,currentPage) {
+                //ajax异步请求 route/myfavorite
+                $.get("route/myfavorite",{uid:uid,currentPage:currentPage},function (pb) {
+                    //设置页码，拼字符串
+                    var lis = '';
+
+                    var firstLi ='<li><a href="myfavorite.html?currentPage='+1+'">首页</a></li>';
+
+                    var beforeNum = pb.currentPage - 1;
+                    if(beforeNum <=0){
+                        beforeNum = 1;
+                    }
+                    var beforeLi ='<li class="threeword"><a href="myfavorite.html?currentPage='+beforeNum+'">上一页</a></li>';
+
+                    lis += firstLi;
+                    lis += beforeLi;
+
+                    /*
+                        页码展示规则
+                        1.一共展示10个页码，能够达到前5后4的效果
+                        2.如果前边不够5个，后边补齐10个
+                        3.如果后边不足4个，前边补齐10个
+                    */
+                    //定义开始和结束
+                    var begin;
+                    var end;
+
+                    //初试化,展示十个页面
+                    if (pb.totalPage < 10) {
+                        //总页码不足10个
+                        begin = 1;
+                        end = pb.totalPage;
+                    } else {
+                        //总页码大于10
+                        begin = pb.currentPage - 5;
+                        end = pb.currentPage + 4;
+
+                        //2.如果前边不够5个，后边补齐10个
+                        if (begin < 1) {
+                            begin = 1;
+                            end = begin + 9;
+                        }
+                        //3.如果后边不足4个，前边补齐10个
+                        if (end > pb.totalPage) {
+                            end = pb.totalPage;
+                            begin = end - 9;
+                        }
+                    }
+                    //遍历
+                    for (var i = begin; i <= end; i++) {
+                        var li;
+                        //判断是否是当前页
+                        if (pb.currentPage === i) {
+                            li ='<li class="curPage"><a href="myfavorite.html?currentPage='+i+'">' + i + '</a></li>';
+                        }else {
+                            li ='<li><a href="myfavorite.html?currentPage='+i+'">' + i + '</a></li>';
+                        }
+                        lis+=li;
+                    }
+                    //下一页
+                    var nextNum = pb.currentPage + 1;
+                    if (nextNum >= pb.totalPage) {
+                        //逻辑判断，如果大于等于总页码，则让下一页等于总页码
+                        nextNum = pb.totalPage;
+                    }
+
+                    var nextLi ='<li class="threeword"><a href="myfavorite.html?currentPage='+nextNum+'">下一页</a></li>';
+
+                    var lastLi ='<li class="threeword"><a href="myfavorite.html?currentPage='+pb.totalPage+'">末页</a></li>';
+
+                    lis += nextLi;
+                    lis += lastLi;
+                    $('#pageNum').html(lis);
+
+                    //2 展示数据
+                    var route_list = "";
+                    //遍历, 路线信息存放在PageBean里面的list中
+                    for (var i = 0; i < pb.list.length; i++) {
+                        //取出一条路线
+                        var route = '<div class="col-md-3">\n' +
+                            '        <a href="route_detail.html?rid='+pb.list[i].rid+'">\n' +
+                            '            <img src="'+pb.list[i].rimage+'" alt="">\n' +
+                            '            <div class="has_border">\n' +
+                            '                <h3>'+pb.list[i].rname+'</h3>\n' +
+                            '                <div class="price">网付价<em>￥</em><strong>'+pb.list[i].price+'</strong><em>起</em></div>\n' +
+                            '            </div>\n' +
+                            '        </a>\n' +
+                            '    </div>';
+                        route_list += route;
+                    }
+                    $('#route').html(route_list);
+                    //加载完数据，定位到指定位置
+                    window.scrollTo(0, 0);
+                })
+            }
+
+        </script>
     </head>
     <body>
-    <!--引入头部-->
-    <div id="header"></div>
-         <!-- 排行榜 start-->
-        <section id="content">            
+        <!--引入头部-->
+        <div id="header"></div>
+        <!-- 排行榜 start-->
+        <section id="content">
             <section class="hemai_jx">
                 <div class="jx_top">
                     <div class="jx_tit">
                         <img src="images/icon_5.jpg" alt="">
                         <span>我的收藏</span>
-                    </div>                    
+                    </div>
                 </div>
                 <div class="jx_content">
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="home">
-                            <div class="row">
+                            <div class="row" id="route">
                                 <div class="col-md-3">
                                     <a href="route_detail.html">
                                         <img src="images/collection_pic.jpg" alt="">
@@ -105,7 +224,7 @@
                                         </div>
                                     </a>
                                 </div>
-                                 <div class="col-md-3">
+                                <div class="col-md-3">
                                     <a href="route_detail.html">
                                         <img src="images/collection_pic.jpg" alt="">
                                         <div class="has_border">
@@ -142,11 +261,11 @@
                                     </a>
                                 </div>
                             </div>
-                        </div>                       
+                        </div>
                     </div>
                 </div>
                 <div class="pageNum">
-                    <ul>
+                    <ul id = "pageNum">
                         <li><a href="">首页</a></li>
                         <li class="threeword"><a href="#">上一页</a></li>
                         <li><a href="#">1</a></li>
@@ -163,12 +282,12 @@
                         <li class="threeword"><a href="javascript:;">末页</a></li>
                     </ul>
                 </div>
-            </section>                      
+            </section>
         </section>
         <!-- 排行榜 end-->
-    	
-         <!--引入尾部-->
-    	<div id="footer"></div>
+
+        <!--引入尾部-->
+        <div id="footer"></div>
         <!--导入布局js，共享header和footer-->
         <script type="text/javascript" src="js/include.js"></script>
     </body>

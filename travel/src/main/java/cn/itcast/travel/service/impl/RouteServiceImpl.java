@@ -1,13 +1,11 @@
 package cn.itcast.travel.service.impl;
 
-import cn.itcast.travel.dao.CategoryDao;
-import cn.itcast.travel.dao.RouteDao;
-import cn.itcast.travel.dao.RouteImgDao;
-import cn.itcast.travel.dao.SellerDao;
+import cn.itcast.travel.dao.*;
 import cn.itcast.travel.dao.impl.*;
 import cn.itcast.travel.domain.*;
 import cn.itcast.travel.service.RouteService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +21,8 @@ public class RouteServiceImpl implements RouteService {
     SellerDao sellerDao = new SellerDaoImpl();
 
     CategoryDao categoryDao = new CategoryDaoImpl();
+
+    FavoriteDao favoriteDao = new FavoriteDaoImpl();
 
     /**
      * 分页查询
@@ -90,12 +90,12 @@ public class RouteServiceImpl implements RouteService {
     }
 
     /**
-     * 查询人气旅游，count前四名
+     * 查询人气旅游，count前limitCount名
      * @return
      */
     @Override
-    public List<Route> findByCount() {
-        return routeDao.findByCount();
+    public List<Route> findByCount(int limitCount) {
+        return routeDao.findByCount(limitCount);
     }
 
     /**
@@ -135,6 +135,14 @@ public class RouteServiceImpl implements RouteService {
     }
 
     /**
+     * 热门推荐，根据cid（分类名字）和count前六条
+     * @return
+     */
+    @Override
+    public List<Route> findHotByCidAndCount(int cid, int limitCount) {
+        return routeDao.findHotByCidAndCount(cid, limitCount);
+    }
+    /**
      * 收藏排行榜分页查询
      * @param currentPage 当前页码
      * @param pageSize  每页展示的路线数
@@ -162,6 +170,52 @@ public class RouteServiceImpl implements RouteService {
         int start = (currentPage - 1) * pageSize;
         List<Route> list = routeDao.findCountByPage(start, pageSize, rname, beginPrice, endPrice);
         pb.setList(list);
+
+        return pb;
+    }
+
+    /**
+     * 根据rid查询route路线
+     * @param
+     * @return
+     */
+    @Override
+    public PageBean<Route> findByUid(int uid, int currentPage, int pageSize) {
+        PageBean<Route> pb = new PageBean<>();
+
+        List<Integer> ridList = new ArrayList<>();
+
+        List<Route> routes = new ArrayList<>();
+
+        //设置总数据
+        int totalCount = favoriteDao.findCountByUid(uid);
+        pb.setTotalCount(totalCount);
+
+        //设置总页数
+        int totalPage = totalCount % pageSize == 0 ? totalCount / pageSize : (totalCount / pageSize) + 1;
+        pb.setTotalPage(totalPage);
+        //2、设置当前页
+        pb.setCurrentPage(currentPage);
+        //3设置pageSize
+        pb.setPageSize(pageSize);
+
+
+        //4、获取每页显示数据
+        //计算开始页
+        int start = (currentPage - 1) * pageSize;
+        //从数据库中分页查询favorite集合
+        List<Favorite> fList = favoriteDao.findRidByUid(uid, start, pageSize);
+        //从favorite对象集集合中取出rid
+        for (Favorite favorite : fList) {
+            ridList.add(favorite.getRid());
+        }
+        //遍历rid集合，根据rid取出每一条路线放在routes集合中
+        for (Integer rid : ridList) {
+            Route one = routeDao.findOne(rid);
+            routes.add(one);
+        }
+        //设置路线集合
+        pb.setList(routes);
 
         return pb;
     }

@@ -1,5 +1,6 @@
 package cn.itcast.travel.service;
 
+import cn.itcast.travel.domain.Favorite;
 import cn.itcast.travel.domain.PageBean;
 import cn.itcast.travel.domain.Route;
 
@@ -36,10 +37,10 @@ public interface RouteService {
     public String findCname(int cid);
 
     /**
-     * 根据count（收藏次数）查询前四条
+     * 根据count（收藏次数）查询前limitCount条
      * @return
      */
-    public List<Route> findByCount();
+    public List<Route> findByCount(int limitCount);
 
     /**
      * 根据rdate查询前四条
@@ -66,6 +67,14 @@ public interface RouteService {
     public List<Route> findCjByCid();
 
     /**
+     * 热门推荐
+     * @param cid
+     * @param limitCount
+     * @return
+     */
+    public List<Route> findHotByCidAndCount(int cid, int limitCount);
+
+    /**
      * 收藏排行榜分页查询
      * @param currentPage 当前页码
      * @param pageSize  每页展示的路线数
@@ -75,4 +84,11 @@ public interface RouteService {
      * @return
      */
     public PageBean<Route> findCountByPage(int currentPage, int pageSize, String rname, int beginPrice,int endPrice);
+
+    /**
+     * 根据传递的rid集合查询路线
+     * @param ridList
+     * @return
+     */
+    public PageBean<Route> findByUid(int uid, int currentPage, int pageSize);
 }

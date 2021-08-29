@@ -14,12 +14,19 @@
                 if(rname){
                     //url解码
                     rname = window.decodeURIComponent(rname);
+                    $('#input_rname').prop("placeholder",rname);
+                }else {
+                    $('#input_rname').prop("placeholder","请输入线路名称");
                 }
-                $('#input_rname').prop("placeholder",rname);
                 var beginPrice = getParameter("beginPrice");
-                $('#beginPrice').prop("placeholder",beginPrice);
                 var endPrice = getParameter("endPrice");
-                $('#endPrice').prop("placeholder",endPrice);
+                if(beginPrice && endPrice){
+                    $('#beginPrice').prop("placeholder",beginPrice);
+                    $('#endPrice').prop("placeholder",endPrice);
+                }else {
+                    $('#beginPrice').prop("placeholder","最小金额");
+                    $('#endPrice').prop("placeholder","最大金额");
+                }
                 var currentPage = getParameter("currentPage");
 
                 load(rname,currentPage,beginPrice,endPrice);

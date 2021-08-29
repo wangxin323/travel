@@ -6,6 +6,7 @@ import java.io.Serializable;
  * 收藏实体类
  */
 public class Favorite implements Serializable {
+    private int rid;
     private Route route;//旅游线路对象
     private String date;//收藏时间
     private User user;//所属用户
@@ -26,6 +27,14 @@ public class Favorite implements Serializable {
             this.route = route;
             this.date = date;
             this.user = user;
+    }
+
+    public int getRid() {
+        return rid;
+    }
+
+    public void setRid(int rid) {
+        this.rid = rid;
     }
 
     public Route getRoute() {

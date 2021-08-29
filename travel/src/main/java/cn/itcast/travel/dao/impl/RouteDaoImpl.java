@@ -3,6 +3,7 @@ package cn.itcast.travel.dao.impl;
 import cn.itcast.travel.dao.RouteDao;
 import cn.itcast.travel.domain.Route;
 import cn.itcast.travel.util.JDBCUtils;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -93,9 +94,14 @@ public class RouteDaoImpl implements RouteDao {
      */
     @Override
     public Route findOne(int rid) {
-        String sql = "select * from tab_route where rid = ?";
-        //执行sql
-        Route route = template.queryForObject(sql, new BeanPropertyRowMapper<>(Route.class), rid);
+        Route route = null;
+        try {
+            String sql = "select * from tab_route where rid = ?";
+            //执行sql
+            route = template.queryForObject(sql, new BeanPropertyRowMapper<>(Route.class), rid);
+        } catch (DataAccessException e) {
+
+        }
         return route;
     }
 
@@ -124,14 +130,14 @@ public class RouteDaoImpl implements RouteDao {
     }
 
     /**
-     * 查询count 最大的前四条记录
+     * 查询count 最大的前limitCount条记录
      * @return
      */
     @Override
-    public List<Route> findByCount() {
+    public List<Route> findByCount(int limitCount) {
         //SQL 通过count降序排序，再取前四条
-        String sql = "SELECT * FROM tab_route ORDER BY count DESC LIMIT 4";
-        List<Route> list = template.query(sql, new BeanPropertyRowMapper<>(Route.class));
+        String sql = "SELECT * FROM tab_route ORDER BY count DESC LIMIT ?";
+        List<Route> list = template.query(sql, new BeanPropertyRowMapper<>(Route.class),limitCount);
         return list;
     }
 
@@ -184,6 +190,17 @@ public class RouteDaoImpl implements RouteDao {
         return list;
     }
 
+    /**
+     * 查询count 最大的前limitCount条记录
+     * @return
+     */
+    @Override
+    public List<Route> findHotByCidAndCount(int cid, int limitCount) {
+        //SQL 通过count降序排序，再取前四条
+        String sql = "SELECT * FROM tab_route where cid = ? ORDER BY count DESC LIMIT ?";
+        List<Route> list = template.query(sql, new BeanPropertyRowMapper<>(Route.class),cid,limitCount);
+        return list;
+    }
     /**
      * 收藏排行榜查询
      * @param start 开始位置
@@ -263,6 +280,5 @@ public class RouteDaoImpl implements RouteDao {
         Integer totalCount = template.queryForObject(sql, Integer.class, params.toArray());
         return totalCount;
     }
-
 
 }

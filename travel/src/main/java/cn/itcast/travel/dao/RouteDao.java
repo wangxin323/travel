@@ -49,10 +49,10 @@ public interface RouteDao {
     void updateCountByRid(int rid);
 
     /**
-     * 查询count最大的前四条数据
+     * 查询count最大的前limitCount条数据
      * @return 返回四条数据的集合
      */
-    public List<Route> findByCount();
+    public List<Route> findByCount(int limitCount);
 
     /**
      * 根据添加时间查询最新添加的记录
@@ -77,6 +77,14 @@ public interface RouteDao {
      * @return 返回四条数据的集合
      */
     public List<Route> findCjByCid();
+
+    /**
+     * 热门推荐
+     * @param cid
+     * @param limitCount
+     * @return
+     */
+    public List<Route> findHotByCidAndCount(int cid, int limitCount);
 
     /**
      * 收藏排行榜分页查询

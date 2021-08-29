@@ -253,6 +253,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .why_select {
+    width: 1200px;
     overflow: hidden;
     margin: 0 auto;
     border-bottom: solid 1px #666;

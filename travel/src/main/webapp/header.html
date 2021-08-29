@@ -39,6 +39,13 @@
             $('#category').html(lis);
         });
 
+        var rname = getParameter("rname");
+        if (rname){
+            //解码
+            rname = window.decodeURIComponent(rname);
+            $('#search_input').prop("placeholder",rname)
+        }
+
         //搜索框,绑定单击事件
         $('#search-button').click(function () {
             //获取搜索框的值

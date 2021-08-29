@@ -1,5 +1,6 @@
 package cn.itcast.travel.web.servlet;
 
+import cn.itcast.travel.domain.Favorite;
 import cn.itcast.travel.domain.PageBean;
 import cn.itcast.travel.domain.Route;
 import cn.itcast.travel.domain.User;
@@ -168,14 +169,16 @@ public class RouteServlet extends BaseServlet {
      * @throws IOException
      */
     public void findPopular(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //查询条数
+        int limitCount = 4;
         //调用service 查询
-        List<Route> countList = routeService.findByCount();
+        List<Route> countList = routeService.findByCount(limitCount);
         //序列化json 回写给客户端
         writrValueForJson(countList, response);
     }
 
     /**
-     * 查询人气旅游
+     * 查询最新旅游
      * @param request
      * @param response
      * @throws ServletException
@@ -231,6 +234,27 @@ public class RouteServlet extends BaseServlet {
     }
 
     /**
+     * 热门推荐
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void findHot(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //获取cid
+        String cidStr = request.getParameter("cid");
+        int cid = 0;
+        if (cidStr != null && cidStr.length() > 0){
+            cid = Integer.parseInt(cidStr);
+        }
+        //查询条数
+        int limitCount = 6;
+        //调用service 查询
+        List<Route> countList = routeService.findHotByCidAndCount(cid,limitCount);
+        //序列化json 回写给客户端
+        writrValueForJson(countList, response);
+    }
+    /**
      * 收藏排行榜分页查询
      * @param request
      * @param response
@@ -270,5 +294,42 @@ public class RouteServlet extends BaseServlet {
         PageBean<Route> countByPage = routeService.findCountByPage(currentPage, pageSize, rname, beginPrice, endPrice);
         //4 序列化数据为json
         writrValueForJson(countByPage, response);
+    }
+
+    /**
+     * 查询我的收藏
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void myfavorite(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //从session中获取user对象
+        User user = (User) request.getSession().getAttribute("user");
+
+        String currentPageStr = request.getParameter("currentPage");
+        int currentPage = 0;
+        if(currentPageStr != null && currentPageStr.length()>0){
+            currentPage = Integer.parseInt(currentPageStr);
+        }else{
+            currentPage=1;
+        }
+
+        int pageSize = 12;
+
+        PageBean<Route> pb;
+        //判断user是否为空
+        if(user == null){
+            //用户没有登录
+            return;
+
+        }else{
+            //用户已经登录
+            //获取uid
+            int uid = user.getUid();
+            //根据uid查询rid。一个用户可以收藏多个线路，所以返回的是rid的list集合
+            pb = routeService.findByUid(uid, currentPage, pageSize);
+        }
+        writrValueForJson(pb, response);
     }
 }
