@@ -63,6 +63,22 @@
         });*/
     });
 
+    function addFavorite() {
+        var rid = getParameter("rid");
+        $.get("user/findOne",{},function (user) {
+            if(user){
+                //用户已经登录
+                $.get("route/addFavorite",{rid:rid},function () {
+                    //刷新页面
+                    location.reload();
+                })
+            }else {
+                //用户没有登录
+                alert("您尚未登录，请登录！");
+                location.href = "/travel/login.html"
+            }
+        })
+    }
 </script>
 
 <!-- 头部 start -->
@@ -79,7 +95,7 @@
         <!-- 登录状态  -->
         <div class="login">
             <span id="span_username">请登录！</span>
-            <a href="myfavorite.html" class="collection">我的收藏</a>
+            <a href="myfavorite.html" class="collection" onclick="addFavorite();">我的收藏</a>
             <a href="javascript:location.href='exitServlet';">退出</a>
         </div>
     </div>
