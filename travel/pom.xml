@@ -115,7 +115,7 @@
 
     <build>
         <!--maven插件-->
-        <finalName>travel</finalName>
+        <finalName>ROOT</finalName>
         <plugins>
             <!--配置jdk-->
             <plugin>
